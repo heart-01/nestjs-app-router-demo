@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 type Props = {};
 
@@ -13,6 +13,10 @@ type ProductModel = {
   updatedAt: string;
 };
 
+type RenderProductsProps = {
+  products: ProductModel[];
+};
+
 const getProducts = async (): Promise<ProductModel[]> => {
   const response = await fetch("https://65b5302a41db5efd2867677c.mockapi.io/api/v1/products");
   if (!response.ok) {
@@ -21,25 +25,33 @@ const getProducts = async (): Promise<ProductModel[]> => {
   return response.json();
 };
 
-const Page = async (props: Props) => {
+const RenderProducts: React.FC<RenderProductsProps> = ({ products }) => {
+  return (
+    <>
+      {products.map((product) => (
+        <div key={product.id}>
+          <h1>{product.name}</h1>
+          <p>{product.description}</p>
+          <img src={product.imageURL} alt={product.name} />
+          <p>{product.stock}</p>
+          <p>{product.price}</p>
+        </div>
+      ))}
+    </>
+  );
+};
+
+const Page = async ({}: Props) => {
   const products: ProductModel[] = await getProducts();
   console.log(products);
 
   return (
-    <div>
-      Test Page
-      {products.map((product) => {
-        return (
-          <div key={product.id}>
-            <h1>{product.name}</h1>
-            <p>{product.description}</p>
-            <img src={product.imageURL} alt={product.name} />
-            <p>{product.stock}</p>
-            <p>{product.price}</p>
-          </div>
-        );
-      })}
-    </div>
+    <>
+      <div>Test Page</div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <RenderProducts products={products} />
+      </Suspense>
+    </>
   );
 };
 
