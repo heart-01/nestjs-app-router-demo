@@ -48,9 +48,7 @@ const Page = async ({}: Props) => {
   return (
     <>
       <div>Test Page</div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <RenderProducts products={products} />
-      </Suspense>
+      <RenderProducts products={products} />
     </>
   );
 };
