@@ -1,5 +1,6 @@
 import React from "react";
-import { IBlogModel } from "./IBlogModel";
+import { headers } from "next/headers";
+import { IBlogModel } from "../IBlogModel";
 import Link from "next/link";
 
 type Props = {};
@@ -21,25 +22,23 @@ const RenderBlog: React.FC<RenderProductsProps> = ({ blogs }) => {
     <div key={blog.id}>
       <div>
         <span style={{ fontWeight: "bold", marginRight: "15px" }}>{blog.name}</span>
-        <Link href={`/blog/${blog.id}`}>Go to read Blog</Link>
+        <Link href={`/blog/manage/edit/${blog.id}`}>Go to edit Blog</Link>
       </div>
     </div>
   ));
 };
 
 const Page = async ({}: Props) => {
+  const headerRequest = headers();
+  const user = headerRequest.get("user") ? JSON.parse(headerRequest.get("user")!) : null;
   const blogList: IBlogModel[] = await getBlogs();
 
   return (
-    <div>
-      <div>
-        <b>
-          <span>Mange Blog: </span> <Link href={`/blog/manage`}>Go to manage Blog</Link>
-        </b>
-      </div>
-      Blog List:
+    <>
+      <div>Manage Blog</div>
+      <div>{user.email}</div>
       <RenderBlog blogs={blogList} />
-    </div>
+    </>
   );
 };
 
