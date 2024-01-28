@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { handleSubmitForm } from './action';
 
 type Props = {};
 
@@ -39,7 +40,7 @@ const Page = (props: Props) => {
     initProduct();
   }, []);
 
-  console.log(productList)
+  console.log(productList);
 
   return (
     <div>
@@ -55,6 +56,10 @@ const Page = (props: Props) => {
           </div>
         );
       })}
+      <form action={handleSubmitForm}>
+        Email <input name="email" />
+        <button>Submit</button>
+      </form>
     </div>
   );
 };
